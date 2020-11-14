@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Table from "./components/table/table";
 import Sidebar from "./components/sidebar/sidebar";
+import Particles from 'react-particles-js';
 import "./App.scss";
 
 export default class App extends Component {
@@ -105,8 +106,21 @@ export default class App extends Component {
   }
 
   render() {
+    const particlesOptions = {
+      particles: {
+        number: {
+          value: 100,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        }
+      }
+    }
+
     return (
       <div className="App">
+        <Particles params={particlesOptions} className='particles' />
         <Sidebar
           current={this.state.showTable}
           changeTable={this.changeTable}

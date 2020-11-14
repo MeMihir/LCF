@@ -12,15 +12,15 @@ export default function sidebar(props) {
     >
       <h1 className="header">
         {/* <img src='./rlogo.png' alt="Logo"/> */}
-        LAXMI CHIT FUND
+        LAXMI CHIT FUNDS
       </h1>
-      <div className="Navlink" onClick={() => props.changeTable("main")}>
+      <div className={`Navlink ${props.current === 'main' ? 'currNav':''}`} onClick={() => props.changeTable("main")}>
         All Redline
       </div>
-      <div className="Navlink" onClick={() => props.changeTable("new52")}>
+      <div className={`Navlink ${props.current === 'new52' ? 'currNav':''}`} onClick={() => props.changeTable("new52")}>
         New 52 Week Low
       </div>
-      <div className="Navlink" onClick={() => props.changeTable("close52")}>
+      <div className={`Navlink ${props.current === 'close52' ? 'currNav':''}`} onClick={() => props.changeTable("close52")}>
         Close to 52 Week Low
       </div>
     </div>

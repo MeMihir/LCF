@@ -2,10 +2,24 @@
   text-align: center;
   display: flex;
   justify-content: space-between;
+  background: linear-gradient(-45deg, #000, #222831, #1b262c, #010101);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+
+  .particles {
+    position: absolute;
+    width: 100vw;
+    z-index: 1;
+  }
 
   .content {
+    z-index: 5;
     padding: 1% 0;
     width: 100%;
+
+    .header {
+      color: white;
+    }
   }
 }
 
@@ -41,5 +55,16 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

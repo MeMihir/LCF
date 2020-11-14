@@ -9,6 +9,8 @@
     transition: width 1s;
     transition: ease 1s;
     overflow: hidden;
+    opacity: 0.8;
+    z-index: 5;
 
     .header {
         display: none;
@@ -18,6 +20,7 @@
         transition: ease-in-out 0.5s;
         overflow: hidden;
         height: 5rem;
+        color: white;
     }
 
     .Hamburger {
@@ -56,10 +59,12 @@
     transition: ease 1s;
     overflow: hidden;
     width: 20%;
-    background-image: linear-gradient( 135deg, #43CBFF 10%, #9708CC 100%);
-    box-shadow:  0 0 2rem 0 #aeaeae;
+    background-image: linear-gradient( 135deg, #ff414d 10%, #f56a79 100%);
+    box-shadow:  0 0 2rem 0 #ff414d;
+    // box-shadow:  0 0 2rem 0 #aeaeae;
     transition-duration: 1s;
-
+    opacity: 0.8;
+    z-index: 5;
     .header {
         display: inline;
         img {
@@ -77,7 +82,7 @@
         transition: ease-in-out 0.5s;
         color: white;
         transition-duration: 0.01s;
-        
+        cursor: pointer;
     }
     .Navlink:hover {
         font-weight: 1000;
@@ -109,8 +114,9 @@
 .sidebar:hover {
     color: white;
     width: 20%;
-    background-image: linear-gradient( 135deg, #43CBFF 10%, #9708CC 100%);
-    box-shadow:  0 0 2rem 0 #aeaeae;
+    background-image: linear-gradient( 135deg, #ff414d 10%, #f56a79 100%);
+    // background-image: linear-gradient( 135deg, #43CBFF 10%, #9708CC 100%);
+    box-shadow:  0 0 2rem 0 #ff414d;
     transition-duration: 1s;
 
     .Navlink {

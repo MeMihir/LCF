@@ -11,21 +11,21 @@
     table {
         width: 100%;
         th {
-            background-color: #0278ae;
+            background-color: #af2d2d;
             padding: 1.5% 1%;
             position: sticky;
             font-size: 1.2rem;
         }
         tbody {
             tr:hover>td {
-                background-color: #fff!important;
+                background-color: transparent!important;
             }
             td {
                 font-size: 1rem;
                 cursor: pointer;
                 transition: ease 0.5s;
-                color: black;
-                background-color: #a5ecd7;
+                color: white;
+                background-color: #f05458;
                 padding: 0.5%;
             }
         }
