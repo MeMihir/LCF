@@ -18,7 +18,7 @@ export default function Table(props) {
               key={i + 1}
               values={i}
               onClick={() => {
-                props.showDetails(row.id);
+                props.showDetails(i);
               }}
             >
               <td>{i + 1}</td>
