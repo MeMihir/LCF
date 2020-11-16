@@ -12,7 +12,7 @@ export default class App extends Component {
       redline: [],
       mainTable: [],
       close52: [],
-      bse_close52: [],
+      close52Table: [],
       new52: [],
       bse_new52: [],
       showTable: "main",
@@ -79,25 +79,24 @@ export default class App extends Component {
     const table = [];
     while (i < table1.length && j < table2.length) {
       if (
-        (table1[i].current - table1[i].fiftyTwoWeekLowPrice) / table1[i].current <
+        (table1[i].current - table1[i].fiftyTwoWeekLowPrice) /
+          table1[i].current <
         (table2[j].current - table2[j].fiftyTwoWeekLowPrice) / table2[j].current
       ) {
         table.push(table1[i]);
         i++;
-      }
-      else {
+      } else {
         table.push(table2[j]);
         j++;
       }
     }
 
-
-    while(i<table1.length) {
+    while (i < table1.length) {
       table.push(table1[i]);
       i++;
     }
 
-    while(j<table2.length) {
+    while (j < table2.length) {
       table.push(table2[j]);
       j++;
     }
@@ -119,35 +118,37 @@ export default class App extends Component {
       );
       const mainTable = this.buildTable(redline);
 
-
       let bse_close52 = await axios.get(
         "https://etmarketsapis.indiatimes.com/ET_Stats/near52weekslow?pagesize=100&exchange=bse&pageno=1&sortby=percentgap&sortorder=asc"
       );
+      let nse_close52 = await axios.get(
+        "https://etmarketsapis.indiatimes.com/ET_Stats/near52weekslow?pagesize=100&exchange=nse&pageno=1&sortby=percentgap&sortorder=asc"
+      );
+      let close52 = this.mergeTable(
+        this.preprocessData(bse_close52.data.searchresult),
+        this.preprocessData(nse_close52.data.searchresult)
+      );
+      const close52Table = this.buildTable(close52);
+
       let bse_new52 = await axios.get(
         "https://etmarketsapis.indiatimes.com/ET_Stats/new52weekslow?pageno=1&pagesize=100&sortby=percentchange&sortorder=asc&exchange=bse"
       );
-
-      bse_losers = this.preprocessData(bse_losers.data.searchresult);
-      const close52 = this.buildTable(bse_close52.data.searchresult);
-      const new52 = this.buildTable(bse_new52.data.searchresult);
-
-      // let nse_close52 = await axios.get(
-      //   "https://etmarketsapis.indiatimes.com/ET_Stats/near52weekslow?pagesize=100&exchange=nse&pageno=1&sortby=percentgap&sortorder=asc"
-      // );
-      // let nse_new52 = await axios.get(
-      //   "https://etmarketsapis.indiatimes.com/ET_Stats/new52weekslow?pageno=1&pagesize=100&sortby=percentchange&sortorder=asc&exchange=nse"
-      // );
-
-      // const close52 = this.buildTable(nse_close52.data.searchresult);
-      // const new52 = this.buildTable(nse_new52.data.searchresult);
+      let nse_new52 = await axios.get(
+        "https://etmarketsapis.indiatimes.com/ET_Stats/new52weekslow?pageno=1&pagesize=100&sortby=percentchange&sortorder=asc&exchange=nse"
+      );
+      let new52 = this.mergeTable(
+        this.preprocessData(bse_new52.data.searchresult),
+        this.preprocessData(nse_new52.data.searchresult)
+      );
+      const new52Table = this.buildTable(new52);
 
       this.setState({
         redline,
         mainTable,
-        bse_close52: bse_close52.data.searchresult,
         close52,
-        bse_new52: bse_new52.data.searchresult,
+        close52Table,
         new52,
+        new52Table,
       });
     } catch (error) {
       console.log(error);
@@ -204,9 +205,10 @@ export default class App extends Component {
               <Table
                 headers={[
                   "Sr. No",
+                  "Market",
                   "Name",
                   "Open",
-                  "Curr/ Close",
+                  "Curr/Close",
                   "High",
                   "Low",
                   "Value",
@@ -215,7 +217,7 @@ export default class App extends Component {
                   "52 Low",
                   "Diff",
                 ]}
-                contents={this.state.close52}
+                contents={this.state.close52Table}
                 showDetails={this.showDetails}
               />
             </div>
@@ -226,9 +228,10 @@ export default class App extends Component {
               <Table
                 headers={[
                   "Sr. No",
+                  "Market",
                   "Name",
                   "Open",
-                  "Curr/ Close",
+                  "Curr/Close",
                   "High",
                   "Low",
                   "Value",
@@ -237,7 +240,7 @@ export default class App extends Component {
                   "52 Low",
                   "Diff",
                 ]}
-                contents={this.state.new52}
+                contents={this.state.new52Table}
                 showDetails={this.showDetails}
               />
             </div>
