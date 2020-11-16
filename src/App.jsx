@@ -3,6 +3,7 @@ import axios from "axios";
 import Table from "./components/table/table";
 import Sidebar from "./components/sidebar/sidebar";
 import Particles from "react-particles-js";
+import Loader from './components/loading/loading';
 import "./App.scss";
 
 export default class App extends Component {
@@ -16,6 +17,7 @@ export default class App extends Component {
       new52: [],
       bse_new52: [],
       showTable: "main",
+      loading: true,
     };
     this.preprocessData = this.preprocessData.bind(this);
     this.buildTable = this.buildTable.bind(this);
@@ -149,6 +151,7 @@ export default class App extends Component {
         close52Table,
         new52,
         new52Table,
+        loading: false,
       });
     } catch (error) {
       console.log(error);
@@ -171,6 +174,7 @@ export default class App extends Component {
     return (
       <div className="App">
         <Particles params={particlesOptions} className="particles" />
+        {this.state.loading ? <Loader />:null }
         <Sidebar
           current={this.state.showTable}
           changeTable={this.changeTable}
@@ -182,8 +186,8 @@ export default class App extends Component {
               <Table
                 headers={[
                   "Sr. No",
-                  "Market",
                   "Name",
+                  "Market",
                   "Open",
                   "Curr/Close",
                   "High",
@@ -205,8 +209,8 @@ export default class App extends Component {
               <Table
                 headers={[
                   "Sr. No",
-                  "Market",
                   "Name",
+                  "Market",
                   "Open",
                   "Curr/Close",
                   "High",
@@ -228,8 +232,8 @@ export default class App extends Component {
               <Table
                 headers={[
                   "Sr. No",
-                  "Market",
                   "Name",
+                  "Market",
                   "Open",
                   "Curr/Close",
                   "High",
