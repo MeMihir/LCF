@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import axios from "axios";
 import Table from "./components/table/table";
 import Sidebar from "./components/sidebar/sidebar";
-import Particles from 'react-particles-js';
+import Particles from "react-particles-js";
 import "./App.scss";
 
 export default class App extends Component {
   constructor(props) {
     super();
     this.state = {
-      redline_bse: [],
+      redline: [],
       mainTable: [],
       close52: [],
       bse_close52: [],
@@ -21,6 +21,7 @@ export default class App extends Component {
     this.buildTable = this.buildTable.bind(this);
     this.showDetails = this.showDetails.bind(this);
     this.changeTable = this.changeTable.bind(this);
+    this.mergeTable = this.mergeTable.bind(this);
   }
 
   preprocessData(data) {
@@ -35,6 +36,7 @@ export default class App extends Component {
   buildTable(data) {
     return data.map((item) => ({
       name: item.ticker,
+      market: item.segment,
       open: item.open,
       high: item.high,
       low: item.low,
@@ -71,11 +73,53 @@ export default class App extends Component {
     });
   }
 
+  mergeTable(table1, table2) {
+    let i = 0,
+      j = 0;
+    const table = [];
+    while (i < table1.length && j < table2.length) {
+      if (
+        (table1[i].current - table1[i].fiftyTwoWeekLowPrice) / table1[i].current <
+        (table2[j].current - table2[j].fiftyTwoWeekLowPrice) / table2[j].current
+      ) {
+        table.push(table1[i]);
+        i++;
+      }
+      else {
+        table.push(table2[j]);
+        j++;
+      }
+    }
+
+
+    while(i<table1.length) {
+      table.push(table1[i]);
+      i++;
+    }
+
+    while(j<table2.length) {
+      table.push(table2[j]);
+      j++;
+    }
+
+    return table;
+  }
+
   async componentDidMount() {
     try {
       let bse_losers = await axios.get(
         "https://etmarketsapis.indiatimes.com/ET_Stats/losers?pagesize=1000&exchange=bse&pageno=1&sort=intraday&sortby=percentchange&sortorder=asc&duration=1d"
       );
+      let nse_losers = await axios.get(
+        "https://etmarketsapis.indiatimes.com/ET_Stats/losers?pagesize=1000&exchange=nse&pageno=1&sort=intraday&sortby=percentchange&sortorder=asc&duration=1d"
+      );
+      const redline = this.mergeTable(
+        this.preprocessData(nse_losers.data.searchresult),
+        this.preprocessData(bse_losers.data.searchresult)
+      );
+      const mainTable = this.buildTable(redline);
+
+
       let bse_close52 = await axios.get(
         "https://etmarketsapis.indiatimes.com/ET_Stats/near52weekslow?pagesize=100&exchange=bse&pageno=1&sortby=percentgap&sortorder=asc"
       );
@@ -83,21 +127,26 @@ export default class App extends Component {
         "https://etmarketsapis.indiatimes.com/ET_Stats/new52weekslow?pageno=1&pagesize=100&sortby=percentchange&sortorder=asc&exchange=bse"
       );
 
-      // const nse_losers = await axios.get(
-      //   "https://etmarketsapis.indiatimes.com/ET_Stats/losers?pagesize=1000&exchange=nse&pageno=1&sort=intraday&sortby=percentchange&sortorder=asc&duration=1d"
-      // );
-      const redline_bse = bse_losers.data.searchresult;
       bse_losers = this.preprocessData(bse_losers.data.searchresult);
-      const mainTable = this.buildTable(bse_losers);
       const close52 = this.buildTable(bse_close52.data.searchresult);
       const new52 = this.buildTable(bse_new52.data.searchresult);
 
+      // let nse_close52 = await axios.get(
+      //   "https://etmarketsapis.indiatimes.com/ET_Stats/near52weekslow?pagesize=100&exchange=nse&pageno=1&sortby=percentgap&sortorder=asc"
+      // );
+      // let nse_new52 = await axios.get(
+      //   "https://etmarketsapis.indiatimes.com/ET_Stats/new52weekslow?pageno=1&pagesize=100&sortby=percentchange&sortorder=asc&exchange=nse"
+      // );
+
+      // const close52 = this.buildTable(nse_close52.data.searchresult);
+      // const new52 = this.buildTable(nse_new52.data.searchresult);
+
       this.setState({
-        redline_bse,
+        redline,
         mainTable,
-        bse_close52:bse_close52.data.searchresult,
+        bse_close52: bse_close52.data.searchresult,
         close52,
-        bse_new52:bse_new52.data.searchresult,
+        bse_new52: bse_new52.data.searchresult,
         new52,
       });
     } catch (error) {
@@ -112,15 +161,15 @@ export default class App extends Component {
           value: 100,
           density: {
             enable: true,
-            value_area: 800
-          }
-        }
-      }
-    }
+            value_area: 800,
+          },
+        },
+      },
+    };
 
     return (
       <div className="App">
-        <Particles params={particlesOptions} className='particles' />
+        <Particles params={particlesOptions} className="particles" />
         <Sidebar
           current={this.state.showTable}
           changeTable={this.changeTable}
@@ -132,6 +181,7 @@ export default class App extends Component {
               <Table
                 headers={[
                   "Sr. No",
+                  "Market",
                   "Name",
                   "Open",
                   "Curr/Close",
