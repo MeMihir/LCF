@@ -56,10 +56,10 @@ export default class App extends Component {
   showDetails(id) {
     const company =
       this.state.showTable === "main"
-        ? this.state.redline_bse[id]
+        ? this.state.redline[id]
         : this.state.showTable === "new52"
-        ? this.state.bse_new52[id]
-        : this.state.bse_close52[id];
+        ? this.state.new52[id]
+        : this.state.close52[id];
     const url = `https://economictimes.indiatimes.com/${company.companyShortName
       .toLocaleLowerCase()
       .split(" ")
